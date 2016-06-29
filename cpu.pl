@@ -2,8 +2,8 @@
 
 use RRDs;
 
-my $rrdlog = '/var/www/rrd';
-my $graphs = '/var/www/rrd';
+my $rrdlog = '/var/www/html';
+my $graphs = '/var/www/html';
 
 updatecpudata();
 updatecpugraph('day');

@@ -10,44 +10,53 @@
 # (c) The SmoothWall Team
 # rrdtool_mem.pl
 
+# a little hacking by Frank Hereford to make this work with modern free on xenial
+
+
 # define location of rrdtool binary
+
+use strict;
+
+
 my $rrdtool = '/usr/bin/rrdtool';
 # define location of rrdtool databases
-my $rrd = '/var/www/rrd';
+my $rrd = '/var/www/html';
 # define location of images
-my $img = '/var/www/rrd';
+my $img = '/var/www/html';
 
 # get memory usage
-my $mem = `free -b -o |grep Mem`;
-my $swap = `free -b -o |grep Swap |cut -c19-29 |sed 's/ //g'`;
-my @mema = split(/\s+/, $mem);
-my $buffers = $mema[5];
-my $cached = $mema[6];
-$mem = $mema[2] - $buffers - $cached;
-#print "$mem + $buffers + $cached\n";
-# remove eol chars
-#chomp($mem);
-chomp($swap);
+my $mem = `free -m -w |grep Mem`;
+my $swap = `free -m -w |grep Swap`;# |cut -c19-29 |sed 's/ //g'`;
+my @mem = split(/\s+/, $mem);
+my @swap = split(/\s+/, $swap);
 
-#printf "memory: %.2f Mbytes, swap: %.2f Mbytes\n", $mem/1024/1024, $swap/1024/1024;
+#print "Mem: ", $mem;
+#print "Swap: ", $swap;
+#
+#for (my $x = 0; $x < scalar(@mem); $x++)
+  #{ print $x, ": ", $mem[$x], "\n"; }
+#for (my $x = 0; $x < scalar(@swap); $x++)
+  #{ print $x, ": ", $swap[$x], "\n"; }
+
 
 # if rrdtool database doesn't exist, create it
 if (! -e "$rrd/mem.rrd")
 {
-	print "creating rrd database for memory usage...\n";
-	system("$rrdtool create $rrd/mem.rrd -s 300"
-		." DS:mem:GAUGE:600:0:U"
-		." DS:buf:GAUGE:600:0:U"
-		." DS:cache:GAUGE:600:0:U"
-		." DS:swap:GAUGE:600:0:U"
-		." RRA:AVERAGE:0.5:1:576"
-		." RRA:AVERAGE:0.5:6:672"
-		." RRA:AVERAGE:0.5:24:732"
-		." RRA:AVERAGE:0.5:144:1460");
+        print "creating rrd database for memory usage...\n";
+        system("$rrdtool create $rrd/mem.rrd -s 300"
+                ." DS:mem:GAUGE:600:0:U"
+                ." DS:buf:GAUGE:600:0:U"
+                ." DS:cache:GAUGE:600:0:U"
+                ." DS:swap:GAUGE:600:0:U"
+                ." RRA:AVERAGE:0.5:1:576"
+                ." RRA:AVERAGE:0.5:6:672"
+                ." RRA:AVERAGE:0.5:24:732"
+                ." RRA:AVERAGE:0.5:144:1460");
 }
 
 # insert values into rrd
-`$rrdtool update $rrd/mem.rrd -t mem:buf:cache:swap N:$mem:$buffers:$cached:$swap`;
+#print "$rrdtool update $rrd/mem.rrd -t mem:buf:cache:swap N:$mem[2]:$mem[5]:$mem[6]:$swap[2]\n";
+`$rrdtool update $rrd/mem.rrd -t mem:buf:cache:swap N:$mem[2]:$mem[5]:$mem[6]:$swap[2]`;
 
 # create graphs
 &CreateGraph("day");

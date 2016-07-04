@@ -25,8 +25,8 @@ my $rrd = '/var/www/html';
 my $img = '/var/www/html';
 
 # get memory usage
-my $mem = `free -m -w |grep Mem`;
-my $swap = `free -m -w |grep Swap`;# |cut -c19-29 |sed 's/ //g'`;
+my $mem = `free -g -w |grep Mem`;
+my $swap = `free -g -w |grep Swap`;# |cut -c19-29 |sed 's/ //g'`;
 my @mem = split(/\s+/, $mem);
 my @swap = split(/\s+/, $swap);
 
@@ -76,7 +76,7 @@ sub CreateGraph
 		." -h 150 -w 700"
 		." -l 0"
 		." -a PNG"
-		." -v \"bytes\""
+		." -v \"gigabytes\""
 		." -b 1024"
 		." DEF:mem=$rrd/mem.rrd:mem:AVERAGE"
 		." DEF:buf=$rrd/mem.rrd:buf:AVERAGE"

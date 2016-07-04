@@ -15,7 +15,7 @@ my $rrd = '/var/www/html';
 my $img = '/var/www/html';
 
 # process data for each interface (add/delete as required)
-&ProcessInterface("eno1", "internet");
+&ProcessInterface("enp4s0", "internet");
 #&ProcessInterface("eth1", "internet gateway");
 #&ProcessInterface("eth2", "MartinMast wireless link");
 #&ProcessInterface("eth3", "home wireless");

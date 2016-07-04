@@ -16,7 +16,7 @@ sub updatecpugraph {
 
         RRDs::graph ("$graphs/cpu-$period.png",
                 "--start", "-1$period", "-aPNG", "-i", "-z",
-                "--alt-y-grid", "-w 700", "-h 150", "-l 0", "-r",
+                "--alt-y-grid", "-w 1100", "-h 150", "-l 0", "-r",
                 "-t cpu usage per $period",
                 "-v perecent",
                 "DEF:user=$rrdlog/cpu.rrd:user:AVERAGE",
@@ -57,12 +57,12 @@ sub updatecpugraph {
 sub updatecpudata {
         if ( ! -e "$rrdlog/cpu.rrd") {
                 print "Creating cpu.rrd";
-                RRDs::create ("$rrdlog/cpu.rrd", "--step=60",
-                        "DS:user:COUNTER:600:0:U",
-                        "DS:system:COUNTER:600:0:U",
-                        "DS:idle:COUNTER:600:0:U",
-                        "DS:io:COUNTER:600:0:U",
-                        "DS:irq:COUNTER:600:0:U",
+                RRDs::create ("$rrdlog/cpu.rrd", "--step=15",
+                        "DS:user:COUNTER:2400:0:U",
+                        "DS:system:COUNTER:2400:0:U",
+                        "DS:idle:COUNTER:2400:0:U",
+                        "DS:io:COUNTER:2400:0:U",
+                        "DS:irq:COUNTER:2400:0:U",
                         "RRA:AVERAGE:0.5:1:576",
                         "RRA:AVERAGE:0.5:6:672",
                         "RRA:AVERAGE:0.5:24:732",

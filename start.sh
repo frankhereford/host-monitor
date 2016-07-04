@@ -2,9 +2,10 @@
 echo Running infinite monitoring loop
 while true
 do
+	new_cpu.pl
 	cpu.pl
  	mem.pl
         traf.pl
-	sleep 60
+	sleep 2
         date
 done

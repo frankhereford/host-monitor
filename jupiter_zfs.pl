@@ -5,6 +5,12 @@ use RRDTool::OO;
 use Number::Bytes::Human qw(format_bytes parse_bytes);
 use Data::Dumper;
 
+my $cmd = "zfs list -t snapshot";
+open(my $zfs , "-|", $cmd);
+my $snapshot_count = 0;
+while (<$zfs>) { $snapshot_count++; }
+close $zfs;
+print $snapshot_count, "\n";;
 
 my $cmd = "zpool get -pH size,free,freeing,capacity,fragmentation";
 open(my $zpool, "-|", $cmd);
@@ -17,8 +23,7 @@ while (my $line = <$zpool>)
   $zpool{$data[1]} = $data[2];
   }
 close $zpool;
-#print Dumper \%zpool, "\n";
-
+print Dumper \%zpool, "\n";
 
 my $cmd = "zfs list -o mountpoint,compressratio,refcompressratio,used,available,usedbydataset,usedbysnapshots -p -t filesystem";
 open(my $zfs, "-|", $cmd);
@@ -30,7 +35,7 @@ for (my $x = 0; $x < scalar(@headers); $x++)
   {
   $headers[$x] = lc($headers[$x]);
   }
-#print Dumper \@headers, "\n";
+print Dumper \@headers, "\n";
 while (my $line = <$zfs>)
   {
   chomp $line;
@@ -42,7 +47,7 @@ while (my $line = <$zfs>)
     }
   }
 close $zfs;
-#print Dumper \%zfs, "\n";
+print Dumper \%zfs, "\n";
 
 my $totalsnap = 0;
 foreach my $filesystem (keys(%zfs))

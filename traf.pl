@@ -34,7 +34,7 @@ my $out = `/sbin/ifconfig $_[0] |grep bytes|cut -d":" -f3|cut -d" " -f1`;
 chomp($in);
 chomp($out);
 
-print "$_[0] traffic in, out: $in, $out\n";
+#print "$_[0] traffic in, out: $in, $out\n";
 
 # if rrdtool database doesn't exist, create it
 if (! -e "$rrd/$_[0].rrd")

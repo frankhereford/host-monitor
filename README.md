@@ -8,4 +8,7 @@ Usage charts generated with [rrdtool](http://oss.oetiker.ch/rrdtool/).
 
 Web pages with usage charts will be updated every minute inside `rrd` volume
 
+Build it for testing: docker run -it --rm -v rrd:/var/www/html --net=host --cap-add=NET_ADMIN --name=monitor monitor
+
+
 [Working example](http://vpn.devspire.com.au/)

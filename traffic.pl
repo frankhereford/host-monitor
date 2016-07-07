@@ -11,7 +11,6 @@ my $db = DBI->connect("DBI:mysql:database=dns;host=10.10.10.1", "docker");
 my $device_sql = "select INET_NTOA(ip) as ip, hostname, dsname, rrd_graph_color from hosts where record_type = 'A' and no_rrd = 0 order by ip asc";
 my $query = $db->prepare($device_sql);
 
-
 tie my %dns, 'Tie::DNS';
 my $human = Number::Bytes::Human->new(bs => 1000, round_style => 'round', precision => 2);
 
@@ -135,7 +134,9 @@ if (!-e $rrd_location)
     start  => time() - 2*3600,
     end    => time(),
     vertical_label  => 'Bandwidth By Device',
-
+    hrule => { value => 0,
+           color => "#000000",
+             },
     @tx_draws,
     @hidden_rx_draws,
     @rx_draws,
